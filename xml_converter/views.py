@@ -1,21 +1,9 @@
 import json
+from xml.etree import ElementTree
+from xml_converter.utils import parse_element
 
 from django.http import JsonResponse
 from django.shortcuts import render
-
-from xml.etree import ElementTree
-
-def parse_element(element):
-    result = []
-    
-    for sub_element in element:
-        data = {}
-        data[sub_element.tag] = sub_element.text
-        if list(sub_element):
-            data[sub_element.tag] = parse_element(sub_element)
-        result.append(data)
-    
-    return result
 
 
 def upload_page(request):
