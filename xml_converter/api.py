@@ -2,6 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
+from rest_framework.exceptions import ParseError
 
 from xml.etree import ElementTree
 from xml_converter.utils import parse_element
@@ -13,7 +14,10 @@ class ConverterViewSet(ViewSet):
 
     @action(methods=["POST"], detail=False, url_path="convert")
     def convert(self, request, **kwargs):
-        root_xml = ElementTree.fromstring(request.data['file'].read())
+        try:
+            root_xml = ElementTree.fromstring(request.data['file'].read())
+        except:
+            raise ParseError("Invalid XML input")
         
         result = {}
         result[root_xml.tag] = ''

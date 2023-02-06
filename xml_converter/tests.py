@@ -19,16 +19,13 @@ class XMLConversionTestCase(TestCase):
             self.assertEqual(response.json(), {
                 "Root": "",
             })
-
-    def test_api_convert_empty_document(self):
-        with (TEST_DIR / Path('empty.xml')).open() as fp:
-            response = self.client.post('/api/converter/convert/', {
+    
+    def test_connected_convert_invalid_document(self):
+        with (TEST_DIR / Path('error.xml')).open() as fp:
+            response = self.client.post('/connected/', {
                 'file': fp,
             })
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json(), {
-                "Root": "",
-            })
+            self.assertEqual(response.status_code, 400)
 
     def test_connected_convert_addresses(self):
         with (TEST_DIR / Path('addresses.xml')).open() as fp:
@@ -57,3 +54,20 @@ class XMLConversionTestCase(TestCase):
                     },
                 ],
             })
+    
+    def test_api_convert_empty_document(self):
+        with (TEST_DIR / Path('empty.xml')).open() as fp:
+            response = self.client.post('/api/converter/convert/', {
+                'file': fp,
+            })
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), {
+                "Root": "",
+            })
+    
+    def test_api_convert_invalid_document(self):
+        with (TEST_DIR / Path('error.xml')).open() as fp:
+            response = self.client.post('/api/converter/convert/', {
+                'file': fp,
+            })
+            self.assertEqual(response.status_code, 400)

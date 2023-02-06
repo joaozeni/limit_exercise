@@ -8,7 +8,10 @@ from django.shortcuts import render
 
 def upload_page(request):
     if request.method == 'POST':
-        root_xml = ElementTree.fromstring(request.FILES['file'].read())
+        try:
+            root_xml = ElementTree.fromstring(request.FILES['file'].read())
+        except:
+            return JsonResponse({'status':'false','message':'Invalid XML input'}, status=400)
         
         result = {}
         result[root_xml.tag] = ''
